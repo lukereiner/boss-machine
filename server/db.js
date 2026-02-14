@@ -41,6 +41,7 @@ const companies = [
   'Facebook',
   'Microservices',
   'Pets.com',
+  "YouTube"
 ];
 
 const createIdea = () => {
@@ -266,6 +267,7 @@ const deleteAllFromDatabase = (modelType) => {
 module.exports = {
   createMeeting,
   createMinion,
+  createIdea,
   getAllFromDatabase,
   getFromDatabaseById,
   addToDatabase,

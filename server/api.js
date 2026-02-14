@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getAllFromDatabase,
   createMinion,
+  createIdea,
   getFromDatabaseById,
   updateInstanceInDatabase,
   deleteFromDatabasebyId
@@ -31,6 +32,18 @@ minionsRouter.param("minionId", (req, res, next) => {
   } else {
     res.status(404).send("No minion for that ID");
   }
+});
+
+// Idea ID
+ideasRouter.param('ideaId', (req, res, next) => {
+    const ideaId = req.params.ideaId;
+    const findIdeaId = getFromDatabaseById('ideas', ideaId);
+    if (findIdeaId) {
+        req.idea = findIdeaId;
+        next();
+    } else {
+        res.status(404).send('No idea for that ID');
+    }
 });
 
 // MINIONS ROUTES
@@ -66,5 +79,39 @@ minionsRouter.delete('/:minionId', (req, res, next) => {
         res.status(204).send();
     }
 })
+
+// IDEAS ROUTES
+ideasRouter.get('/', (req, res) => {
+    const ideasDb = getAllFromDatabase('ideas');
+    res.send(ideasDb);
+});
+
+ideasRouter.post('/', (req, res) => {
+    const newIdea = createIdea();
+    res.status(201).send(newIdea);
+});
+
+ideasRouter.get('/:ideaId', (req, res) => {
+    res.status(200).send(req.idea);
+});
+
+ideasRouter.put('/:ideaId', (req, res) => {
+    const updatedData = {...req.idea, ...req.body};
+    const updatedIdea = updateInstanceInDatabase('ideas', updatedData);
+    if (!updatedIdea) {
+        res.status(400).send('Idea is invalid');
+    } else {
+        res.status(200).send(updatedIdea);
+    }
+});
+
+ideasRouter.delete('/:ideaId', (req, res) => {
+    const ideaToDelete = deleteFromDatabasebyId('ideas', req.idea.id);
+    if (!ideaToDelete) {
+        res.status(404).send('Idea is invalid');
+    } else {
+        res.status(204).send();
+    }
+});
 
 module.exports = apiRouter;
