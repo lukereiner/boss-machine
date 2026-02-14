@@ -11,6 +11,7 @@ const {
   addToDatabase,
 } = require("./db");
 const apiRouter = express.Router();
+const checkMillionDollarIdea = require('./checkMillionDollarIdea')
 
 // Minions router
 const minionsRouter = express.Router();
@@ -56,8 +57,7 @@ minionsRouter.get("/", (req, res, next) => {
 });
 
 minionsRouter.post("/", (req, res, next) => {
-  const newMinion = createMinion();
-  addToDatabase("minions", newMinion);
+  const newMinion = addToDatabase("minions", req.body);
   res.status(201).send(newMinion);
 });
 
@@ -90,9 +90,8 @@ ideasRouter.get("/", (req, res) => {
   res.send(ideasDb);
 });
 
-ideasRouter.post("/", (req, res) => {
-  const newIdea = createIdea();
-  addToDatabase("ideas", newIdea);
+ideasRouter.post("/", checkMillionDollarIdea, (req, res) => {
+  const newIdea = addToDatabase("ideas", req.body);
   res.status(201).send(newIdea);
 });
 
@@ -100,7 +99,7 @@ ideasRouter.get("/:ideaId", (req, res) => {
   res.status(200).send(req.idea);
 });
 
-ideasRouter.put("/:ideaId", (req, res) => {
+ideasRouter.put("/:ideaId", checkMillionDollarIdea, (req, res) => {
   const updatedData = { ...req.idea, ...req.body };
   const updatedIdea = updateInstanceInDatabase("ideas", updatedData);
   if (!updatedIdea) {
