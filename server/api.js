@@ -8,7 +8,7 @@ const {
   updateInstanceInDatabase,
   deleteFromDatabasebyId,
   deleteAllFromDatabase,
-  addToDatabase
+  addToDatabase,
 } = require("./db");
 const apiRouter = express.Router();
 
@@ -38,15 +38,15 @@ minionsRouter.param("minionId", (req, res, next) => {
 });
 
 // Idea ID
-ideasRouter.param('ideaId', (req, res, next) => {
-    const ideaId = req.params.ideaId;
-    const findIdeaId = getFromDatabaseById('ideas', ideaId);
-    if (findIdeaId) {
-        req.idea = findIdeaId;
-        next();
-    } else {
-        res.status(404).send('No idea for that ID');
-    }
+ideasRouter.param("ideaId", (req, res, next) => {
+  const ideaId = req.params.ideaId;
+  const findIdeaId = getFromDatabaseById("ideas", ideaId);
+  if (findIdeaId) {
+    req.idea = findIdeaId;
+    next();
+  } else {
+    res.status(404).send("No idea for that ID");
+  }
 });
 
 // MINIONS ROUTES
@@ -57,7 +57,7 @@ minionsRouter.get("/", (req, res, next) => {
 
 minionsRouter.post("/", (req, res, next) => {
   const newMinion = createMinion();
-  addToDatabase('minions', newMinion);
+  addToDatabase("minions", newMinion);
   res.status(201).send(newMinion);
 });
 
@@ -66,7 +66,7 @@ minionsRouter.get("/:minionId", (req, res, next) => {
 });
 
 minionsRouter.put("/:minionId", (req, res, next) => {
-  const updatedData = {...req.minion, ...req.body};
+  const updatedData = { ...req.minion, ...req.body };
   const updatedMinion = updateInstanceInDatabase("minions", updatedData);
   if (!updatedMinion) {
     res.status(400).send("Data is invalid");
@@ -75,65 +75,65 @@ minionsRouter.put("/:minionId", (req, res, next) => {
   }
 });
 
-minionsRouter.delete('/:minionId', (req, res, next) => {
-    const minionToDelete = deleteFromDatabasebyId('minions', req.minion.id);
-    if (!minionToDelete) {
-        res.status(404).send('Minion is invalid');
-    } else {
-        res.status(204).send();
-    }
-})
+minionsRouter.delete("/:minionId", (req, res, next) => {
+  const minionToDelete = deleteFromDatabasebyId("minions", req.minion.id);
+  if (!minionToDelete) {
+    res.status(404).send("Minion is invalid");
+  } else {
+    res.status(204).send();
+  }
+});
 
 // IDEAS ROUTES
-ideasRouter.get('/', (req, res) => {
-    const ideasDb = getAllFromDatabase('ideas');
-    res.send(ideasDb);
+ideasRouter.get("/", (req, res) => {
+  const ideasDb = getAllFromDatabase("ideas");
+  res.send(ideasDb);
 });
 
-ideasRouter.post('/', (req, res) => {
-    const newIdea = createIdea();
-    addToDatabase('ideas', newIdea);
-    res.status(201).send(newIdea);
+ideasRouter.post("/", (req, res) => {
+  const newIdea = createIdea();
+  addToDatabase("ideas", newIdea);
+  res.status(201).send(newIdea);
 });
 
-ideasRouter.get('/:ideaId', (req, res) => {
-    res.status(200).send(req.idea);
+ideasRouter.get("/:ideaId", (req, res) => {
+  res.status(200).send(req.idea);
 });
 
-ideasRouter.put('/:ideaId', (req, res) => {
-    const updatedData = {...req.idea, ...req.body};
-    const updatedIdea = updateInstanceInDatabase('ideas', updatedData);
-    if (!updatedIdea) {
-        res.status(400).send('Idea is invalid');
-    } else {
-        res.status(200).send(updatedIdea);
-    }
+ideasRouter.put("/:ideaId", (req, res) => {
+  const updatedData = { ...req.idea, ...req.body };
+  const updatedIdea = updateInstanceInDatabase("ideas", updatedData);
+  if (!updatedIdea) {
+    res.status(400).send("Idea is invalid");
+  } else {
+    res.status(200).send(updatedIdea);
+  }
 });
 
-ideasRouter.delete('/:ideaId', (req, res) => {
-    const ideaToDelete = deleteFromDatabasebyId('ideas', req.idea.id);
-    if (!ideaToDelete) {
-        res.status(404).send('Idea is invalid');
-    } else {
-        res.status(204).send();
-    }
+ideasRouter.delete("/:ideaId", (req, res) => {
+  const ideaToDelete = deleteFromDatabasebyId("ideas", req.idea.id);
+  if (!ideaToDelete) {
+    res.status(404).send("Idea is invalid");
+  } else {
+    res.status(204).send();
+  }
 });
 
 // MEETINGS ROUTES
-meetingsRouter.get('/', (req, res) => {
-    const meetingsDb = getAllFromDatabase('meetings');
-    res.send(meetingsDb);
+meetingsRouter.get("/", (req, res) => {
+  const meetingsDb = getAllFromDatabase("meetings");
+  res.send(meetingsDb);
 });
 
-meetingsRouter.post('/', (req, res) => {
-    const newMeeting = createMeeting();
-    addToDatabase('meetings', newMeeting);
-    res.status(201).send(newMeeting);
+meetingsRouter.post("/", (req, res) => {
+  const newMeeting = createMeeting();
+  addToDatabase("meetings", newMeeting);
+  res.status(201).send(newMeeting);
 });
 
-meetingsRouter.delete('/', (req, res) => {
-    const meetingToDelete = deleteAllFromDatabase('meetings');
-    res.status(204).send();
+meetingsRouter.delete("/", (req, res) => {
+  deleteAllFromDatabase("meetings");
+  res.status(204).send();
 });
 
 module.exports = apiRouter;
