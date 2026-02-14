@@ -3,9 +3,12 @@ const {
   getAllFromDatabase,
   createMinion,
   createIdea,
+  createMeeting,
   getFromDatabaseById,
   updateInstanceInDatabase,
-  deleteFromDatabasebyId
+  deleteFromDatabasebyId,
+  deleteAllFromDatabase,
+  addToDatabase
 } = require("./db");
 const apiRouter = express.Router();
 
@@ -54,6 +57,7 @@ minionsRouter.get("/", (req, res, next) => {
 
 minionsRouter.post("/", (req, res, next) => {
   const newMinion = createMinion();
+  addToDatabase('minions', newMinion);
   res.status(201).send(newMinion);
 });
 
@@ -88,6 +92,7 @@ ideasRouter.get('/', (req, res) => {
 
 ideasRouter.post('/', (req, res) => {
     const newIdea = createIdea();
+    addToDatabase('ideas', newIdea);
     res.status(201).send(newIdea);
 });
 
@@ -112,6 +117,23 @@ ideasRouter.delete('/:ideaId', (req, res) => {
     } else {
         res.status(204).send();
     }
+});
+
+// MEETINGS ROUTES
+meetingsRouter.get('/', (req, res) => {
+    const meetingsDb = getAllFromDatabase('meetings');
+    res.send(meetingsDb);
+});
+
+meetingsRouter.post('/', (req, res) => {
+    const newMeeting = createMeeting();
+    addToDatabase('meetings', newMeeting);
+    res.status(201).send(newMeeting);
+});
+
+meetingsRouter.delete('/', (req, res) => {
+    const meetingToDelete = deleteAllFromDatabase('meetings');
+    res.status(204).send();
 });
 
 module.exports = apiRouter;

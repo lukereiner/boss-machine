@@ -268,6 +268,7 @@ module.exports = {
   createMeeting,
   createMinion,
   createIdea,
+  createMeeting,
   getAllFromDatabase,
   getFromDatabaseById,
   addToDatabase,
